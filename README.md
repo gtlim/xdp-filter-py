@@ -2,13 +2,13 @@
 Filter packets using xdp eBPF
 
 # Installation
-Please follow bcc install step described in https://github.com/iovisor/bcc/blob/master/INSTALL.md
+Please follow [bcc install](https://github.com/iovisor/bcc/blob/master/INSTALL.md) step 
 
 # Demo
 ```bash
 > python3 xdp_filter.py -d ens5 -p 6379 # Drop all traffic to 6379 port
 
-> === Printing drops with IP, hit CTRL+C to stop ===
+=== Printing drops with IP, hit CTRL+C to stop ===
 10.20.14.216: 1
 10.20.14.216: 2
 10.20.14.216: 3
