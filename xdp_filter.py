@@ -10,6 +10,7 @@ parser.add_argument('--device', '-d', dest='device', help='device', required=Tru
 parser.add_argument('--mode', '-m', dest='mode', help='skb or driver mode.', default='skb')
 parser.add_argument('--port', '-p', dest='port', help='drop packets from certain port.')
 parser.add_argument('--ip', '-i', dest='ip', help='drop packets from certain ip.')
+parser.add_argument('--syn', '-s', dest='ip', help='drop packets with syn only.')
 parser.add_argument('--jitter', '-j', dest='jitter', help='randomly drop packets. ( range: 0 ~ 100 )', default='100')
 
 args = parser.parse_args()
@@ -27,6 +28,8 @@ if args.mode == 'drv':
 
 filter_port = -1
 filter_ip = -1
+filter_syn_only = -1
+
 if args.port:
     filter_port = args.port
 
@@ -37,7 +40,11 @@ if args.ip:
     # convert to binary
     filter_ip = struct.unpack("!L", socket.inet_aton(sadr))[0]
 
-cflags = ["-w", "-DPORTNUM=%s" % filter_port, "-DIP=%s" % filter_ip, "-DJITTER=%s" % args.jitter]
+if args.syn:
+    filter_syn_only = 1
+
+cflags = ["-w", "-DPORTNUM=%s" % filter_port, "-DIP=%s" % filter_ip, "-DJITTER=%s" % args.jitter,
+          "-DSYN=%s" % filter_syn_only]
 
 text_file = open("./xdp_filter.c", "r")
 data = text_file.read()

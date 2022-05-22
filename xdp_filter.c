@@ -87,19 +87,26 @@ process_tcp(struct Packet* packet) {
     uint32_t tcp_flag;
     long *value;
     long zero = 0;
+    int filter = 1;
 
     unsigned int randomnumber;
     randomnumber = bpf_get_prandom_u32() % 100;
     tcp_port = bpf_ntohs(tcp->source);
-    tcp_flag = bpf_ntohs(tcp->flags);
+    tcp_flag = bpf_ntohs(tcp->flags) 0xff;
     tcp_saddr = ip->saddr;
 
-    if ( PORTNUM == -1 || tcp_port == PORTNUM ) {
-      if ( IP == -1 || tcp_saddr == IP ) {
-        if (randomnumber < JITTER) {
-          value = counter.lookup_or_init(&tcp_saddr, &zero);
-          (*value) += 1;
-          return XDP_DROP;
+    if (SYN == 1 && ((tcp_flag & TH_SYN) != TH_SYN)) {
+      filter = 0;
+    }
+
+    if( filter ) {
+      if ( PORTNUM == -1 || tcp_port == PORTNUM ) {
+        if ( IP == -1 || tcp_saddr == IP ) {
+          if (randomnumber < JITTER) {
+            value = counter.lookup_or_init(&tcp_saddr, &zero);
+            (*value) += 1;
+            return XDP_DROP;
+          }
         }
       }
     }
