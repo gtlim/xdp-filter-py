@@ -10,7 +10,7 @@ parser.add_argument('--device', '-d', dest='device', help='device', required=Tru
 parser.add_argument('--mode', '-m', dest='mode', help='skb or driver mode.', default='skb')
 parser.add_argument('--port', '-p', dest='port', help='drop packets from certain port.')
 parser.add_argument('--ip', '-i', dest='ip', help='drop packets from certain ip.')
-parser.add_argument('--syn', '-s', dest='ip', help='drop packets with syn only.')
+parser.add_argument('--syn', '-s', dest='syn', help='drop packets with syn only.')
 parser.add_argument('--jitter', '-j', dest='jitter', help='randomly drop packets. ( range: 0 ~ 100 )', default='100')
 
 args = parser.parse_args()
